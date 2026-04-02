@@ -16,7 +16,7 @@ exports.login = async(req, res) => {
             return res.status(400).json({ message: "Wrong Password" });
         }
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-        res.json({ token });
+        return res.status(200).json({ token, username: user.username });
     } catch (error) {
         res.status(500).json({ message: "Server Error" });
     }
@@ -28,11 +28,12 @@ exports.register = async(req, res) => {
         if (existingUser) {
             return res.status(400).json({ message: "Username already taken" });
         }
-        const hashed_Password = await bcrypt.hash(password, 12);
-        const newUser = new User({ username, password: hashed_Password });
+
+        const newUser = new User({ username, password });
         await newUser.save();
-        res.status(201).json({ message: "User Registered Successfully" });
+        return res.status(201).json({ message: "User Registered Successfully" });
     } catch (error) {
+        console.error("REGISTER ERROR:", error);
         res.status(500).json({ message: "Server Error" });
     }
 };

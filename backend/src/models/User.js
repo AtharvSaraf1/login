@@ -11,11 +11,14 @@ const userSchema = new mongoose.Schema({
         required: true
     }
 });
-userSchema.pre('save', async function(next) {
-    const user = this;
-    if (!user.isModified('password')) return next();
-    const hashed_Password = await bcrypt.hash(user.password, 12);
-    user.password = hashed_Password;
-    next();
+userSchema.pre('save', async function() {
+    if (!this.isModified('password')) return;
+
+    try {
+        const salt = await bcrypt.genSalt(12);
+        this.password = await bcrypt.hash(this.password, salt);
+    } catch (err) {
+        throw err;
+    }
 });
 module.exports = mongoose.model('User', userSchema);
