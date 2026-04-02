@@ -21,7 +21,7 @@ function App() {
 
             {loggedInUser ? (
                 <div className="alert alert-info text-center py-5">
-                    <h2>Welcome back, <span className="text-primary">{loggedInUser}</span>! 🎉</h2>
+                    <h2>Welcome back, <span className="text-primary">{loggedInUser}</span>! </h2>
                     <button onClick={logout} className="btn btn-outline-danger mt-3">Logout</button>
                 </div>
             ) : (
